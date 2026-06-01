@@ -28,8 +28,7 @@ html, body {
   background: var(--deep);
   color: var(--ink);
   font-family: 'Prompt', sans-serif;
-  overflow-x: hidden; 
-  cursor: none;
+  overflow-x: hidden;
   position: relative;
   width: 100%;
   max-width: 100vw;
@@ -48,20 +47,50 @@ html, body {
   -ms-overflow-style: none; /* IE & Edge */
 }
 
+/* ซ่อน cursor เฉพาะ desktop — JS จะ add .has-cursor เมื่อ detect mouse */
+body.has-cursor,
+body.has-cursor *,
+body.has-cursor *::before,
+body.has-cursor *::after { cursor: none !important; }
+
 /* ซ่อน Scrollbar ของ Chrome/Safari/Opera */
 ::-webkit-scrollbar {
   display: none;
 }
 
 /* ─── ARTISTIC FADE (AMBIENT GLOWS) ─── */
-.ambient-glow {position:absolute;border-radius:50%;filter:blur(120px);opacity:0.25;pointer-events:none;z-index:0}
+/* ใช้ fixed แทน absolute เพื่อให้ไม่ push layout และไม่ล้นใต้ footer */
+.ambient-glow {position:fixed;border-radius:50%;filter:blur(120px);opacity:0.25;pointer-events:none;z-index:0}
 .glow-1 {top:15%;left:-10%;width:50vw;height:50vw;background:var(--warm-glow)}
 .glow-2 {top:45%;right:-10%;width:40vw;height:40vw;background:#8b4513}
-.glow-3 {bottom:5%;left:20%;width:60vw;height:40vw;background:var(--gold);opacity:0.15}
+.glow-3 {top:60%;left:20%;width:60vw;height:40vw;background:var(--gold);opacity:0.15}
 
-/* ─── NEW FLUID CURSOR ─── */
-.cursor-dot {position:fixed;width:6px;height:6px;background:var(--warm-glow);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .08s;box-shadow:0 0 10px var(--warm-glow)}
-.cursor-ring {position:fixed;width:40px;height:40px;border:2px solid var(--warm-glow);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .25s cubic-bezier(0.1, 0.8, 0.25, 1);mix-blend-mode:screen;box-shadow:inset 0 0 15px rgba(230,145,56,.3)}
+/* ─── CUSTOM CURSOR ─── */
+body.is-touch { cursor: auto !important; }
+body.is-touch .cursor-dot { display: none !important; }
+.cursor-dot {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--warm-glow);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .15s, height .15s, opacity .2s;
+  will-change: left, top;
+}
+.cursor-ring { display: none !important; }
+
+/* ─── WATER CANVAS ─── */
+#water-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+  mix-blend-mode: screen;
+}
 
 /* ─── NAV ─── */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.4rem 5rem;display:flex;align-items:center;justify-content:space-between;transition:all .5s;background:linear-gradient(to bottom, rgba(13,9,7,0.9), transparent)}
@@ -161,20 +190,20 @@ section.pad{padding:8rem 6rem}
 /* ─── FOOTER ─── */
 footer {
   background: #000;
-  padding: 2.5rem 6rem;
+  padding: 2rem 6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap; 
-  max-width: 100vw;
+  flex-wrap: wrap;
+  width: 100%;
   box-sizing: border-box;
-  overflow: hidden; 
   gap: 1.5rem;
   color: rgba(255,255,255,.4);
   font-size: .85rem;
   border-top: 1px solid rgba(255,255,255,.05);
   position: relative;
-  z-index: 2;
+  z-index: 10;  /* สูงกว่า glow ซึ่งเป็น fixed z-index:0 */
+  isolation: isolate; /* ตัด glow ที่ fixed ไม่ให้ทะลุ */
 }
 footer a{color:rgba(255,255,255,.6);text-decoration:none;transition:color 0.3s}
 footer a:hover{color:var(--amber)}
@@ -189,6 +218,31 @@ footer a:hover{color:var(--amber)}
 .lang-en .th-text, .lang-en .zh-text {display:none!important}
 .lang-zh .th-text, .lang-zh .en-text {display:none!important}
 .lang-zh .h2, .lang-zh .menu-card-title, .lang-zh .amb-card-title {font-family:'Noto Serif SC',serif}
+
+/* ─── LANGUAGE TRANSITION ─── */
+/* fade overlay ที่ครอบทั้งหน้าตอน switch ภาษา */
+#lang-overlay {
+  position: fixed; inset: 0;
+  background: rgba(13,9,7,0);
+  pointer-events: none;
+  z-index: 1000;
+  transition: background 0.22s ease;
+}
+#lang-overlay.fading { background: rgba(13,9,7,0.55); }
+
+/* ทุก element ที่มี data-i18n จะ transition opacity */
+[data-i18n] {
+  transition: opacity 0.18s ease;
+}
+body.lang-switching [data-i18n] {
+  opacity: 0;
+}
+
+/* btn-reserve — ขนาดปรับ smooth เมื่อข้อความเปลี่ยน */
+.btn-reserve {
+  white-space: nowrap;
+  transition: all .35s cubic-bezier(0.4,0,0.2,1) !important;
+}
 
 @media(max-width:1024px){
   section.pad{padding:5rem 2rem}
@@ -208,12 +262,13 @@ footer a:hover{color:var(--amber)}
 </head>
 <body class="lang-th" id="htmlRoot">
 
+<div id="lang-overlay"></div>
 <div class="ambient-glow glow-1"></div>
 <div class="ambient-glow glow-2"></div>
 <div class="ambient-glow glow-3"></div>
 
+<canvas id="water-canvas"></canvas>
 <div class="cursor-dot" id="cd"></div>
-<div class="cursor-ring" id="cr"></div>
 
 <nav id="mainNav">
   <div class="nav-brand">
@@ -372,7 +427,7 @@ footer a:hover{color:var(--amber)}
       <p style="font-size:0.95rem; margin-bottom:0.5rem; color:#fff"><i class="ti ti-phone" style="color:var(--amber)"></i> +66 83 431 1165</p>
       <p style="font-size:0.9rem; color:var(--text2); line-height:1.6" data-i18n="addr_val"></p>
       
-      <a href="https://www.google.com/maps/search/?api=1&query=13.66330065122087,100.56956262633142" target="_blank" style="text-decoration:none; display:block;">
+      <a href="https://www.google.com/maps/search/?api=1&query=13.663252778215854,100.56959475190116" target="_blank" style="text-decoration:none; display:block;">
         <div class="map-box tilt-element">
           <i class="ti ti-map-pin" style="font-size:2rem; color:var(--amber); margin-bottom:10px; display:block; transform:translateZ(20px)"></i>
           <p data-i18n="map_text" style="font-size:0.85rem; color:#fff; margin-bottom:1rem; font-weight:500; transform:translateZ(10px)"></p>
@@ -494,27 +549,74 @@ const T = {
   }
 };
 
-/* I18N LOGIC */
+/* I18N LOGIC — with smooth transition */
 let curLang = 'th';
-function applyLang(lang){
-  curLang = lang;
-  document.getElementById('htmlRoot').className = 'lang-' + lang;
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if(T[lang][key] !== undefined) el.innerHTML = T[lang][key];
-  });
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.lang === lang);
-  });
-}
-document.querySelectorAll('.lang-btn').forEach(b => {
-  b.addEventListener('click', () => applyLang(b.dataset.lang));
-});
-applyLang('th');
+const overlay = document.getElementById('lang-overlay');
 
-/* NAVBAR SCROLL */
-window.addEventListener('scroll', () => {
-  document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 50);
+function applyLang(lang, animate = true) {
+  if (lang === curLang && animate) return;
+  curLang = lang;
+
+  const doSwap = () => {
+    document.getElementById('htmlRoot').className = 'lang-' + lang + ' lang-switching';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+  };
+
+  if (!animate) {
+    doSwap();
+    /* remove switching class instantly on first load */
+    requestAnimationFrame(() => {
+      document.getElementById('htmlRoot').classList.remove('lang-switching');
+    });
+    return;
+  }
+
+  /* 1. fade overlay in + fade text out */
+  overlay.classList.add('fading');
+  document.getElementById('htmlRoot').classList.add('lang-switching');
+
+  setTimeout(() => {
+    /* 2. swap all text mid-fade */
+    doSwap();
+
+    /* 3. fade overlay out + fade text back in */
+    requestAnimationFrame(() => {
+      overlay.classList.remove('fading');
+      /* small delay so browser registers the class before removing */
+      setTimeout(() => {
+        document.getElementById('htmlRoot').classList.remove('lang-switching');
+      }, 40);
+    });
+  }, 200); /* เท่ากับ transition duration ของ overlay */
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', () => applyLang(b.dataset.lang, true));
+});
+applyLang('th', false);
+
+/* NAVBAR SCROLL — ใช้ lenis event แทน window scroll */
+lenis.on('scroll', ({ scroll }) => {
+  document.getElementById('mainNav').classList.toggle('scrolled', scroll > 50);
+});
+
+/* ─── SMOOTH ANCHOR SCROLL ผ่าน Lenis ─── */
+document.querySelectorAll('a[href^="#"], button[data-href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const id = link.getAttribute('href') || link.dataset.href;
+    if (!id || id === '#') return;
+    const target = document.querySelector(id);
+    if (!target) return;
+    e.preventDefault();
+    const navH = document.getElementById('mainNav').offsetHeight;
+    lenis.scrollTo(target, { offset: -navH, duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  });
 });
 
 /* REVEAL ON SCROLL */
@@ -523,85 +625,206 @@ const io = new IntersectionObserver(entries => {
 }, {threshold: .1});
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-/* ─── 3D TILT EFFECT & FLUID CURSOR ─── */
-const cd = document.getElementById('cd'), cr = document.getElementById('cr');
-document.addEventListener('mousemove', e => {
-  cd.style.left = e.clientX + 'px'; cd.style.top = e.clientY + 'px';
-  cr.style.left = e.clientX + 'px'; cr.style.top = e.clientY + 'px';
-});
-document.querySelectorAll('a, button, .lang-btn, .map-box').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cr.style.transform = 'translate(-50%,-50%) scale(1.6)';
-    cr.style.backgroundColor = 'rgba(230,145,56,0.1)';
-    cd.style.transform = 'translate(-50%,-50%) scale(0.5)';
+/* ─── MOUSE SYSTEMS (desktop only) ─── */
+(function(){
+  const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (isTouch) { document.body.classList.add('is-touch'); return; }
+  document.body.classList.add('has-cursor');
+
+  /* === 1. CURSOR === */
+  const cd = document.getElementById('cd');
+  let mouseX = -200, mouseY = -200;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cd.style.left = mouseX + 'px';
+    cd.style.top  = mouseY + 'px';
   });
-  el.addEventListener('mouseleave', () => {
-    cr.style.transform = 'translate(-50%,-50%) scale(1)';
-    cr.style.backgroundColor = 'transparent';
-    cd.style.transform = 'translate(-50%,-50%) scale(1)';
+  document.addEventListener('mouseleave', () => cd.style.opacity = '0');
+  document.addEventListener('mouseenter', () => cd.style.opacity = '1');
+
+  /* dot ใหญ่ขึ้นเล็กน้อยตอน hover link/button */
+  document.querySelectorAll('a, button, .map-box').forEach(el => {
+    el.addEventListener('mouseenter', () => { cd.style.width='14px'; cd.style.height='14px'; });
+    el.addEventListener('mouseleave', () => { cd.style.width='8px';  cd.style.height='8px'; });
   });
-});
 
-/* 3D TILT LOGIC สำหรับการ์ดทั้งหมด */
-document.querySelectorAll('.tilt-element').forEach(el => {
-  el.addEventListener('mousemove', e => {
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left; 
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // คำนวณองศาการเอียง
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-    
-    // Smooth Hover Entry
-    el.style.transition = 'transform 0.2s ease-out';
-    el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-    
-    cr.style.transform = 'translate(-50%,-50%) scale(2)';
-    cr.style.borderColor = 'rgba(255,255,255,0.2)';
-  });
-  
-  el.addEventListener('mouseleave', () => {
-    // Bouncing/Spring effect (Cubic Bezier)
-    el.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    el.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-    cr.style.transform = 'translate(-50%,-50%) scale(1)';
-    cr.style.borderColor = 'var(--warm-glow)';
-  });
-});
+  /* === 2. WATER DISPLACEMENT CANVAS === */
+  const canvas = document.getElementById('water-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
 
-/* 3D TILT LOGIC สำหรับ HERO SECTION */
-const hero = document.querySelector('.hero');
-const heroContent = document.querySelector('.hero-content');
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
 
-hero.addEventListener('mousemove', e => {
-  const rect = hero.getBoundingClientRect();
-  const x = e.clientX - rect.left; 
-  const y = e.clientY - rect.top;
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
-  
-  const rotateX = ((y - centerY) / centerY) * -6; 
-  const rotateY = ((x - centerX) / centerX) * 6;
-  
-  heroContent.style.transition = 'transform 0.2s ease-out';
-  heroContent.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-});
+  /* สร้าง grid ของ particles แทน wave lines
+     แต่ละ particle มีตำแหน่ง home (hx,hy) และตำแหน่งปัจจุบัน (px,py)
+     เมื่อ mouse เข้าใกล้ — ถูกผลักออก (displacement) สร้าง "หลุม"
+     เมื่อ mouse ออกห่าง — spring กลับหา home */
+  const COLS = 42, ROWS = 28;
+  const particles = [];
 
-hero.addEventListener('mouseleave', () => {
-  heroContent.style.transition = 'transform 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-  heroContent.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-});
+  function buildGrid() {
+    particles.length = 0;
+    for (let r = 0; r <= ROWS; r++) {
+      for (let c = 0; c <= COLS; c++) {
+        particles.push({
+          hx: (c / COLS) * W,
+          hy: (r / ROWS) * H,
+          px: (c / COLS) * W,
+          py: (r / ROWS) * H,
+          vx: 0, vy: 0
+        });
+      }
+    }
+  }
+  buildGrid();
+  window.addEventListener('resize', () => { resize(); buildGrid(); });
 
-/* PARALLAX EFFECT FOR BACKGROUND GLOW & HERO (Lenis Compatible) */
+  /* smooth mouse */
+  let smx = W/2, smy = H/2;
+  const PUSH_RADIUS = 180;
+  const PUSH_FORCE  = 5.5;
+  const SPRING      = 0.06;
+  const DAMP        = 0.82;
+
+  function updateParticles() {
+    for (const p of particles) {
+      const dx = p.px - smx;
+      const dy = p.py - smy;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+
+      if (dist < PUSH_RADIUS && dist > 0.01) {
+        /* inverse-square push — สร้างหลุมตรงกลาง */
+        const strength = PUSH_FORCE * Math.pow(1 - dist / PUSH_RADIUS, 2.2);
+        p.vx += (dx / dist) * strength;
+        p.vy += (dy / dist) * strength;
+      }
+
+      /* spring กลับหา home */
+      p.vx += (p.hx - p.px) * SPRING;
+      p.vy += (p.hy - p.py) * SPRING;
+
+      /* dampen */
+      p.vx *= DAMP;
+      p.vy *= DAMP;
+
+      p.px += p.vx;
+      p.py += p.vy;
+    }
+  }
+
+  function drawWater() {
+    ctx.clearRect(0, 0, W, H);
+
+    /* วาด horizontal lines — แถวๆ ของ grid */
+    for (let r = 0; r <= ROWS; r++) {
+      ctx.beginPath();
+      for (let c = 0; c <= COLS; c++) {
+        const p = particles[r * (COLS+1) + c];
+        c === 0 ? ctx.moveTo(p.px, p.py) : ctx.lineTo(p.px, p.py);
+      }
+      /* ความสว่างขึ้นเมื่อ row อยู่ใกล้ mouse Y */
+      const rowY = (r / ROWS) * H;
+      const dy = Math.abs(rowY - smy);
+      const alpha = 0.04 + Math.max(0, 1 - dy / 300) * 0.1;
+      ctx.strokeStyle = `rgba(78,143,168,${alpha})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+
+    /* วาด vertical lines */
+    for (let c = 0; c <= COLS; c++) {
+      ctx.beginPath();
+      for (let r = 0; r <= ROWS; r++) {
+        const p = particles[r * (COLS+1) + c];
+        r === 0 ? ctx.moveTo(p.px, p.py) : ctx.lineTo(p.px, p.py);
+      }
+      const colX = (c / COLS) * W;
+      const dx2 = Math.abs(colX - smx);
+      const alpha = 0.025 + Math.max(0, 1 - dx2 / 300) * 0.07;
+      ctx.strokeStyle = `rgba(168,205,216,${alpha})`;
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+
+    /* hole glow — แสงส้มจางๆ ตรงหลุมน้ำ */
+    const grd = ctx.createRadialGradient(smx, smy, 0, smx, smy, PUSH_RADIUS * 0.9);
+    grd.addColorStop(0,   'rgba(13,9,7,0.18)');
+    grd.addColorStop(0.4, 'rgba(230,145,56,0.06)');
+    grd.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  /* === 3. PROXIMITY TILT (ไม่ต้องอยู่บน card) === */
+  const tiltEls = [...document.querySelectorAll('.tilt-element')];
+
+  function updateTilts() {
+    for (const el of tiltEls) {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      const dx = smx - cx;
+      const dy = smy - cy;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const range = 340; /* รัศมีที่ card เริ่มหัน */
+
+      if (dist < range) {
+        const str = 1 - dist / range;
+        const rY =  (dx / range) * 16 * str;
+        const rX = -(dy / range) * 12 * str;
+        const s  = 1 + str * 0.03;
+        el.style.transition = 'transform 0.18s ease-out, box-shadow 0.18s ease-out';
+        el.style.transform   = `perspective(1000px) rotateX(${rX}deg) rotateY(${rY}deg) scale(${s})`;
+        el.style.boxShadow   = `0 ${10+str*30}px ${20+str*50}px rgba(0,0,0,${0.3+str*0.25})`;
+      } else {
+        el.style.transition = 'transform 0.8s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.8s ease';
+        el.style.transform  = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+        el.style.boxShadow  = '';
+      }
+    }
+  }
+
+  /* === HERO CONTENT TILT === */
+  const heroEl      = document.querySelector('.hero');
+  const heroContent = document.querySelector('.hero-content');
+
+  function updateHeroTilt() {
+    if (!heroEl) return;
+    const rect = heroEl.getBoundingClientRect();
+    /* ทำงานเฉพาะตอน hero visible */
+    if (rect.bottom < 0 || rect.top > H) return;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top  + rect.height / 2;
+    const rY =  ((smx - cx) / (rect.width  / 2)) * 5;
+    const rX = -((smy - cy) / (rect.height / 2)) * 4;
+    heroContent.style.transition = 'transform 0.25s ease-out';
+    heroContent.style.transform  = `perspective(1200px) rotateX(${rX}deg) rotateY(${rY}deg)`;
+  }
+
+  /* === MAIN LOOP === */
+  function loop() {
+    smx += (mouseX - smx) * 0.07;
+    smy += (mouseY - smy) * 0.07;
+    updateParticles();
+    drawWater();
+    updateTilts();
+    updateHeroTilt();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+})();
+
+/* PARALLAX EFFECT FOR HERO BACKGROUND (Lenis Compatible) */
 lenis.on('scroll', (e) => {
   const y = e.scroll;
   document.querySelector('.dl-sky').style.transform = `translateY(${y * .2}px)`;
-  document.querySelectorAll('.ambient-glow').forEach((glow, index) => {
-    glow.style.transform = `translateY(${y * (0.1 + (index*0.05))}px)`;
-  });
 });
 </script>
 </body>
