@@ -50,31 +50,30 @@
             animation: subtle-zoom 25s infinite alternate ease-in-out;
         }
 
-        /* 4. ปรับแต่ง Google Translate ให้ดูคลีน ไม่รก */
-        .goog-te-gadget {
-            font-family: 'Prompt', sans-serif !important;
-            font-size: 0 !important; /* ซ่อนข้อความ Powered by */
-            color: transparent !important;
-        }
-        .goog-te-gadget .goog-te-combo {
+        
+
+
+        /* ── LANG SWITCHER ─────────────────────────── */
+        .lang-sw { display: flex; align-items: center; gap: 0; }
+        .lang-btn {
             font-family: 'Prompt', sans-serif;
-            font-size: 12px;
-            padding: 6px 10px;
-            border: 1px solid #e7e5e4;
-            border-radius: 0px;
-            outline: none;
-            color: #57534e;
-            background-color: white;
-            margin: 0;
-            cursor: pointer;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            background: transparent;
+            border: none;
+            color: #78716c;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            line-height: 1;
         }
-        .goog-logo-link { display: none !important; }
-        .goog-te-gadget span { display: none !important; }
-        /* ซ่อนแถบแบนเนอร์ด้านบนของ Google */
-        .skiptranslate iframe { display: none !important; }
-        body { top: 0px !important; position: static !important; }
+        .lang-btn:hover { color: #065f46; }
+        .lang-btn.active { color: #065f46; font-weight: 600; }
+        .lang-div { width: 1px; height: 14px; background: #d6d3d1; flex-shrink: 0; }
+        body { transition: opacity 0.2s ease; }
+        body.lang-fading { opacity: 0; }
 
         /* Navbar Transition */
         .nav-scrolled {
@@ -100,21 +99,25 @@
                 
                 <!-- Menu & Tools -->
                 <div class="hidden lg:flex items-center space-x-10 text-xs tracking-[0.2em] uppercase font-medium">
-                    <a href="#about" class="text-stone-600 hover:text-emerald-800 transition duration-500">เรื่องราวของเรา</a>
-                    <a href="#gastronomy" class="text-stone-600 hover:text-emerald-800 transition duration-500">สุนทรียศาสตร์</a>
-                    <a href="#ambiance" class="text-stone-600 hover:text-emerald-800 transition duration-500">ทัศนียภาพ</a>
-                    <a href="#banquet" class="text-stone-600 hover:text-emerald-800 transition duration-500">จัดเลี้ยง</a>
+                    <a href="#about" class="text-stone-600 hover:text-emerald-800 transition duration-500"><span data-i18n="nav_about">เรื่องราวของเรา</span></a>
+                    <a href="#gastronomy" class="text-stone-600 hover:text-emerald-800 transition duration-500"><span data-i18n="nav_gastronomy">สุนทรียศาสตร์</span></a>
+                    <a href="#ambiance" class="text-stone-600 hover:text-emerald-800 transition duration-500"><span data-i18n="nav_ambiance">ทัศนียภาพ</span></a>
+                    <a href="#banquet" class="text-stone-600 hover:text-emerald-800 transition duration-500"><span data-i18n="nav_banquet">จัดเลี้ยง</span></a>
                     
-                    <!-- ปลั๊กอินแปลภาษา (Google Translate) -->
-                    <div id="google_translate_element" class="ml-4 mr-2"></div>
+                    
+                    <!-- Language Switcher -->
+                    <div class="lang-sw ml-2 mr-2">
+                        <button class="lang-btn active" onclick="setLang('th')">TH</button>
+                        <span class="lang-div"></span>
+                        <button class="lang-btn" onclick="setLang('en')">EN</button>
+                        <span class="lang-div"></span>
+                        <button class="lang-btn" onclick="setLang('zh')">中文</button>
+                    </div>
 
-                    <a href="#reserve" class="bg-emerald-900 hover:bg-amber-600 text-white px-8 py-3.5 transition duration-500 shadow-md">สำรองที่นั่ง</a>
+                    <a href="#reserve" class="bg-emerald-900 hover:bg-amber-600 text-white px-8 py-3.5 transition duration-500 shadow-md"><span data-i18n="nav_reserve">สำรองที่นั่ง</span></a>
                 </div>
 
-                <!-- Mobile Translate Widget (โชว์เฉพาะตอนจอเล็ก) -->
-                <div class="lg:hidden flex items-center">
-                    <div id="google_translate_element_mobile"></div>
-                </div>
+                
             </div>
         </div>
     </nav>
@@ -128,16 +131,16 @@
         </div>
         
         <div class="relative z-10 text-center px-4 max-w-5xl mt-20 scroll-reveal active">
-            <span class="inline-block text-white uppercase tracking-[0.4em] text-xs md:text-sm mb-6 font-light bg-black/20 backdrop-blur-sm px-6 py-2 rounded-sm border border-white/20">The Ultimate Riverside Dining</span>
+            <span class="inline-block text-white uppercase tracking-[0.4em] text-xs md:text-sm mb-6 font-light bg-black/20 backdrop-blur-sm px-6 py-2 rounded-sm border border-white/20"><span data-i18n="hero_badge">The Ultimate Riverside Dining</span></span>
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-extralight text-white mb-8 leading-tight tracking-wide drop-shadow-lg">
-                สัมผัสความเหนือระดับ <br>
-                <span class="font-normal text-amber-200 italic">ริมแม่น้ำเจ้าพระยา</span>
+                <span data-i18n="hero_h1a">สัมผัสความเหนือระดับ</span> <br>
+                <span class="font-normal text-amber-200 italic" data-i18n="hero_h1b">ริมแม่น้ำเจ้าพระยา</span>
             </h1>
             <p class="text-base md:text-lg text-stone-100 font-light max-w-2xl mx-auto mb-14 leading-relaxed tracking-wide drop-shadow-md">
-                ร่วมเฉลิมฉลองค่ำคืนสุดพิเศษด้วยรสชาติอาหารไทยต้นตำรับอันเป็นเอกลักษณ์ ท่ามกลางวิวพาโนรามาของสะพานภูมิพลที่งดงามที่สุด
+                <span data-i18n="hero_sub">ร่วมเฉลิมฉลองค่ำคืนสุดพิเศษด้วยรสชาติอาหารไทยต้นตำรับอันเป็นเอกลักษณ์ ท่ามกลางวิวพาโนรามาของสะพานภูมิพลที่งดงามที่สุด</span>
             </p>
             <a href="#reserve" class="inline-block border border-white text-white uppercase tracking-widest text-sm px-12 py-4 hover:bg-white hover:text-stone-900 transition duration-500 bg-black/10 backdrop-blur-sm">
-                สำรองโต๊ะส่วนตัว
+                <span data-i18n="hero_cta">สำรองโต๊ะส่วนตัว</span>
             </a>
         </div>
     </section>
@@ -149,14 +152,14 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                 <div class="lg:col-span-5 scroll-reveal">
-                    <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-6">Our Legacy</span>
-                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-stone-900 mb-8 leading-snug">ตำนานความอร่อย<br>ที่ส่งต่อมาร่วม <br><span class="font-normal text-emerald-900">ครึ่งศตวรรษ</span></h2>
+                    <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-6" data-i18n="about_tag">Our Legacy</span>
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-stone-900 mb-8 leading-snug"><span data-i18n="about_h1">ตำนานความอร่อย</span><br><span data-i18n="about_h2">ที่ส่งต่อมาร่วม</span> <br><span class="font-normal text-emerald-900" data-i18n="about_h3">ครึ่งศตวรรษ</span></h2>
                     <div class="w-16 h-[1px] bg-amber-500 mb-8"></div>
                     <p class="text-stone-600 font-light leading-relaxed mb-6 text-sm md:text-base">
-                        เสวย ริเวอร์วิว ไม่ได้เป็นเพียงแค่ร้านอาหาร แต่คือสถานที่รวบรวมความทรงจำอันล้ำค่า ทุกเมนูถูกรังสรรค์ด้วยความพิถีพิถันจากวัตถุดิบที่คัดสรรอย่างยอดเยี่ยมที่สุดในแต่ละวัน เพื่อมอบรสชาติอันเป็นที่สุดให้แก่คุณ
+                        <span data-i18n="about_p1">เสวย ริเวอร์วิว ไม่ได้เป็นเพียงแค่ร้านอาหาร แต่คือสถานที่รวบรวมความทรงจำอันล้ำค่า ทุกเมนูถูกรังสรรค์ด้วยความพิถีพิถันจากวัตถุดิบที่คัดสรรอย่างยอดเยี่ยมที่สุดในแต่ละวัน เพื่อมอบรสชาติอันเป็นที่สุดให้แก่คุณ</span>
                     </p>
                     <p class="text-stone-600 font-light leading-relaxed text-sm md:text-base">
-                        ไม่ว่าจะเป็นมื้ออาหารค่ำอันอบอุ่นกับครอบครัว หรือการต้อนรับพันธมิตรทางธุรกิจคนสำคัญ บรรยากาศและการบริการระดับพรีเมียมของเราพร้อมที่จะเปลี่ยนมื้อธรรมดาให้เป็นความประทับใจที่ไม่รู้ลืม
+                        <span data-i18n="about_p2">ไม่ว่าจะเป็นมื้ออาหารค่ำอันอบอุ่นกับครอบครัว หรือการต้อนรับพันธมิตรทางธุรกิจคนสำคัญ บรรยากาศและการบริการระดับพรีเมียมของเราพร้อมที่จะเปลี่ยนมื้อธรรมดาให้เป็นความประทับใจที่ไม่รู้ลืม</span>
                     </p>
                 </div>
                 <div class="lg:col-span-7 grid grid-cols-12 gap-4 scroll-reveal delay-200">
@@ -179,11 +182,11 @@
     <section id="gastronomy" class="py-32 bg-stone-50 relative border-y border-stone-100/80">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center max-w-3xl mx-auto mb-20 scroll-reveal">
-                <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-4">Culinary Artifacts</span>
+                <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-4" data-i18n="gastro_tag">Culinary Artifacts</span>
                 <h2 class="text-3xl md:text-5xl font-light text-stone-900 mb-6">ศิลปะแห่งรสชาติ<span class="font-normal text-emerald-900">ระดับมาสเตอร์พีซ</span></h2>
                 <div class="w-12 h-[1px] bg-amber-500 mx-auto mb-6"></div>
                 <p class="text-stone-500 font-light text-sm md:text-base leading-relaxed">
-                    คัดสรรวัตถุดิบอาหารทะเลสดใหม่จากท้องทะเลไทย นำมาปรุงแต่งผ่านฝีมือเชฟผู้เชี่ยวชาญเพื่อคงความหวานตามธรรมชาติพร้อมรสสัมผัสที่กลมกล่อมสมบูรณ์แบบ
+                    <span data-i18n="gastro_sub">คัดสรรวัตถุดิบอาหารทะเลสดใหม่จากท้องทะเลไทย นำมาปรุงแต่งผ่านฝีมือเชฟผู้เชี่ยวชาญเพื่อคงความหวานตามธรรมชาติพร้อมรสสัมผัสที่กลมกล่อมสมบูรณ์แบบ</span>
                 </p>
             </div>
 
@@ -197,26 +200,26 @@
                 <div class="lg:col-span-6 space-y-10 scroll-reveal delay-200">
                     <div class="border-b border-stone-200 pb-6 group">
                         <div class="flex justify-between items-baseline mb-3">
-                            <h3 class="text-xl font-medium text-stone-900 group-hover:text-emerald-800 transition">กุ้งแม่น้ำเผาเตาถ่านไซส์พรีเมียม</h3>
+                            <h3 class="text-xl font-medium text-stone-900 group-hover:text-emerald-800 transition" data-i18n="m1_name">กุ้งแม่น้ำเผาเตาถ่านไซส์พรีเมียม</h3>
                             <span class="text-amber-700 font-light tracking-widest text-sm">Seasonal</span>
                         </div>
-                        <p class="text-stone-500 font-light text-sm leading-relaxed">กุ้งแม่น้ำธรรมชาติคัดขนาดพิเศษ มันกุ้งเยิ้มหอมกรุ่น เสิร์ฟคู่กับน้ำจิ้มซีฟู้ดสูตรลับเฉพาะที่สืบทอดมารุ่นสู่รุ่น</p>
+                        <p class="text-stone-500 font-light text-sm leading-relaxed" data-i18n="m1_desc">กุ้งแม่น้ำธรรมชาติคัดขนาดพิเศษ มันกุ้งเยิ้มหอมกรุ่น เสิร์ฟคู่กับน้ำจิ้มซีฟู้ดสูตรลับเฉพาะที่สืบทอดมารุ่นสู่รุ่น</p>
                     </div>
 
                     <div class="border-b border-stone-200 pb-6 group">
                         <div class="flex justify-between items-baseline mb-3">
-                            <h3 class="text-xl font-medium text-stone-900 group-hover:text-emerald-800 transition">เป็ดย่างฮ่องกงสูตรโบราณ</h3>
+                            <h3 class="text-xl font-medium text-stone-900 group-hover:text-emerald-800 transition" data-i18n="m2_name">เป็ดย่างฮ่องกงสูตรโบราณ</h3>
                             <span class="text-stone-400 font-light tracking-widest text-sm">THB 850</span>
                         </div>
-                        <p class="text-stone-500 font-light text-sm leading-relaxed">หนังกรอบเนื้อนุ่มละมุนลิ้น ผ่านกระบวนการอบและหมักเครื่องเทศสมุนไพรจีนนานกว่า 24 ชั่วโมง</p>
+                        <p class="text-stone-500 font-light text-sm leading-relaxed" data-i18n="m2_desc">หนังกรอบเนื้อนุ่มละมุนลิ้น ผ่านกระบวนการอบและหมักเครื่องเทศสมุนไพรจีนนานกว่า 24 ชั่วโมง</p>
                     </div>
 
                     <div class="border-b border-stone-200 pb-6 group">
                         <div class="flex justify-between items-baseline mb-3">
-                            <h3 class="text-xl font-medium text-stone-900 group-hover:text-emerald-800 transition">ปูทะเลเนื้อผัดผงกะหรี่สูตรเสวย</h3>
+                            <h3 class="text-xl font-medium text-stone-900 group-hover:text-emerald-800 transition" data-i18n="m3_name">ปูทะเลเนื้อผัดผงกะหรี่สูตรเสวย</h3>
                             <span class="text-stone-400 font-light tracking-widest text-sm">THB 1,200</span>
                         </div>
-                        <p class="text-stone-500 font-light text-sm leading-relaxed">เมนูซิกเนเจอร์อันดับหนึ่ง เนื้อปูทะเลสดก้ามโต เนื้อแน่นหวาน ผัดคลุกเคล้าซอสผงกะหรี่เนื้อเนียนนุ่มเข้มข้น</p>
+                        <p class="text-stone-500 font-light text-sm leading-relaxed" data-i18n="m3_desc">เมนูซิกเนเจอร์อันดับหนึ่ง เนื้อปูทะเลสดก้ามโต เนื้อแน่นหวาน ผัดคลุกเคล้าซอสผงกะหรี่เนื้อเนียนนุ่มเข้มข้น</p>
                     </div>
                 </div>
             </div>
@@ -228,10 +231,10 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
                 <div class="lg:col-span-5 order-2 lg:order-1 scroll-reveal">
-                    <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-4">The Majestic Vista</span>
+                    <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-4" data-i18n="amb_tag">The Majestic Vista</span>
                     <h2 class="text-3xl md:text-5xl font-light text-stone-900 mb-6 leading-tight">วิจิตรตระการตา<br>ตระกองแสงไฟสะท้อน <span class="font-normal text-emerald-900 italic">ผืนน้ำ</span></h2>
                     <p class="text-stone-600 font-light leading-relaxed mb-10 text-sm md:text-base">
-                        เมื่อค่ำคืนมาเยือน แสงไฟสีทองจากสะพานภูมิพลจะทอดเงาสะท้อนลงบนแม่น้ำเจ้าพระยาอย่างงดงาม ราวกับภาพวาดที่มีชีวิต มอบบรรยากาศอันแสนโรแมนติกที่ไม่มีใครเทียบได้ให้กับมื้อค่ำของคุณ
+                        <span data-i18n="amb_p">เมื่อค่ำคืนมาเยือน แสงไฟสีทองจากสะพานภูมิพลจะทอดเงาสะท้อนลงบนแม่น้ำเจ้าพระยาอย่างงดงาม ราวกับภาพวาดที่มีชีวิต มอบบรรยากาศอันแสนโรแมนติกที่ไม่มีใครเทียบได้ให้กับมื้อค่ำของคุณ</span>
                     </p>
                     
                     <div class="grid grid-cols-2 gap-8 text-center border-t border-stone-100 pt-10">
@@ -267,23 +270,23 @@
                     </div>
                 </div>
                 <div class="scroll-reveal delay-200">
-                    <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-4">Bespoke Gatherings</span>
+                    <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-4" data-i18n="ban_tag">Bespoke Gatherings</span>
                     <h2 class="text-3xl md:text-4xl font-light text-stone-900 mb-6">พื้นที่จัดเลี้ยงส่วนตัว<br><span class="font-normal text-emerald-900">เหนือระดับ</span></h2>
                     <p class="text-stone-600 font-light leading-relaxed mb-8 text-sm md:text-base">
-                        ตอบโจทย์ทุกความต้องการระดับพรีเมียม ด้วยห้องวีไอพีส่วนตัวที่ตกแต่งอย่างหรูหรา และพื้นที่ริมน้ำอเนกประสงค์ที่รองรับทั้งงานเลี้ยงสังสรรค์ขององค์กร งานเปิดตัวผลิตภัณฑ์ หรือพิธีมงคลสมรสอันแสนหวาน พร้อมทีมงานดูแลระดับมืออาชีพ
+                        <span data-i18n="ban_p">ตอบโจทย์ทุกความต้องการระดับพรีเมียม ด้วยห้องวีไอพีส่วนตัวที่ตกแต่งอย่างหรูหรา และพื้นที่ริมน้ำอเนกประสงค์ที่รองรับทั้งงานเลี้ยงสังสรรค์ขององค์กร งานเปิดตัวผลิตภัณฑ์ หรือพิธีมงคลสมรสอันแสนหวาน พร้อมทีมงานดูแลระดับมืออาชีพ</span>
                     </p>
                     <ul class="space-y-5 text-stone-600 font-light text-sm">
                         <li class="flex items-start">
                             <span class="w-1.5 h-1.5 bg-amber-500 mt-2 mr-4 rounded-full flex-shrink-0"></span>
-                            <span>ระบบโสตทัศนูปกรณ์และเครื่องเสียงที่ทันสมัยครบครัน</span>
+                            <span data-i18n="ban_li1">ระบบโสตทัศนูปกรณ์และเครื่องเสียงที่ทันสมัยครบครัน</span>
                         </li>
                         <li class="flex items-start">
                             <span class="w-1.5 h-1.5 bg-amber-500 mt-2 mr-4 rounded-full flex-shrink-0"></span>
-                            <span>บริการจัดแต่งดีไซน์สถานที่ตามเอกลักษณ์ของงานคุณ</span>
+                            <span data-i18n="ban_li2">บริการจัดแต่งดีไซน์สถานที่ตามเอกลักษณ์ของงานคุณ</span>
                         </li>
                         <li class="flex items-start">
                             <span class="w-1.5 h-1.5 bg-amber-500 mt-2 mr-4 rounded-full flex-shrink-0"></span>
-                            <span>ออกแบบคอร์สเมนูอาหารสุดพิเศษ (Customized Menu) โดยเชฟใหญ่</span>
+                            <span data-i18n="ban_li3">ออกแบบคอร์สเมนูอาหารสุดพิเศษ (Customized Menu) โดยเชฟใหญ่</span>
                         </li>
                     </ul>
                 </div>
@@ -297,10 +300,10 @@
         <div class="relative z-10 max-w-4xl mx-auto px-6 lg:px-12 text-center scroll-reveal">
             <span class="text-6xl text-amber-600/30 font-serif leading-none block mb-4">"</span>
             <p class="text-xl md:text-3xl font-light text-stone-800 italic max-w-3xl mx-auto leading-relaxed mb-10">
-                เป็นสถานที่จัดงานเลี้ยงพาร์ทเนอร์ธุรกิจที่น่าประทับใจมาก แขกต่างชาติทุกคนประทับใจในวิวแม่น้ำเจ้าพระยา รสชาติของกุ้งเผา และการบริการที่ไร้ที่ติ แนะนำอย่างยิ่งสำหรับงานสำคัญ
+                <span data-i18n="review_q">เป็นสถานที่จัดงานเลี้ยงพาร์ทเนอร์ธุรกิจที่น่าประทับใจมาก แขกต่างชาติทุกคนประทับใจในวิวแม่น้ำเจ้าพระยา รสชาติของกุ้งเผา และการบริการที่ไร้ที่ติ แนะนำอย่างยิ่งสำหรับงานสำคัญ</span>
             </p>
             <div class="w-8 h-[1px] bg-stone-300 mx-auto mb-6"></div>
-            <span class="text-[10px] md:text-xs uppercase tracking-[0.2em] text-stone-500 font-medium block">คุณกิตติพงษ์ — ประธานบริหารกลุ่มธนกิจ B2B</span>
+            <span class="text-[10px] md:text-xs uppercase tracking-[0.2em] text-stone-500 font-medium block" data-i18n="review_author">คุณกิตติพงษ์ — ประธานบริหารกลุ่มธนกิจ B2B</span>
         </div>
     </section>
 
@@ -308,34 +311,34 @@
     <section id="reserve" class="py-32 bg-stone-50">
         <div class="max-w-4xl mx-auto px-6 lg:px-12 scroll-reveal">
             <div class="text-center mb-12">
-                <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-3">Make a Reservation</span>
-                <h2 class="text-3xl md:text-4xl font-light text-stone-900">สังสรรค์ช่วงเวลาอันมีค่า<span class="text-emerald-900 font-normal">ของคุณ</span></h2>
+                <span class="text-xs uppercase tracking-[0.4em] text-amber-600 font-semibold block mb-3" data-i18n="res_tag">Make a Reservation</span>
+                <h2 class="text-3xl md:text-4xl font-light text-stone-900"><span data-i18n="res_h1">สังสรรค์ช่วงเวลาอันมีค่า</span><span class="text-emerald-900 font-normal" data-i18n="res_h2">ของคุณ</span></h2>
             </div>
             
             <div class="bg-white border border-stone-200 p-8 md:p-12 shadow-xl">
                 <form class="space-y-8" onsubmit="return false;">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2">ชื่อ - นามสกุล</label>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2" data-i18n="form_name">ชื่อ - นามสกุล</label>
                             <input type="text" placeholder="ระบุชื่อของคุณ" class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-sm focus:border-emerald-800 focus:bg-white focus:outline-none transition-colors text-stone-800">
                         </div>
                         <div>
-                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2">เบอร์โทรศัพท์</label>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2" data-i18n="form_phone">เบอร์โทรศัพท์</label>
                             <input type="tel" placeholder="08X-XXX-XXXX" class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-sm focus:border-emerald-800 focus:bg-white focus:outline-none transition-colors text-stone-800">
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div>
-                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2">วันที่ต้องการจอง</label>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2" data-i18n="form_date">วันที่ต้องการจอง</label>
                             <input type="date" class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-sm focus:border-emerald-800 focus:bg-white focus:outline-none transition-colors text-stone-800">
                         </div>
                         <div>
-                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2">เวลา</label>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2" data-i18n="form_time">เวลา</label>
                             <input type="time" class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-sm focus:border-emerald-800 focus:bg-white focus:outline-none transition-colors text-stone-800">
                         </div>
                         <div>
-                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2">จำนวนท่าน</label>
+                            <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2" data-i18n="form_guests">จำนวนท่าน</label>
                             <select class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-sm focus:border-emerald-800 focus:bg-white focus:outline-none transition-colors text-stone-800 cursor-pointer">
                                 <option>1 - 2 ท่าน</option>
                                 <option>3 - 4 ท่าน</option>
@@ -346,13 +349,13 @@
                     </div>
                     
                     <div>
-                        <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2">ความต้องการเพิ่มเติม (ถ้ามี)</label>
+                        <label class="block text-[10px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-2" data-i18n="form_note">ความต้องการเพิ่มเติม (ถ้ามี)</label>
                         <textarea rows="3" placeholder="เช่น อาหารแพ้, ฉลองวันเกิด..." class="w-full bg-stone-50 border border-stone-200 px-4 py-3 text-sm focus:border-emerald-800 focus:bg-white focus:outline-none transition-colors text-stone-800 resize-none"></textarea>
                     </div>
                     
                     <div class="text-center pt-6">
                         <button class="bg-emerald-900 text-white uppercase tracking-[0.2em] text-xs px-12 py-4 hover:bg-amber-600 transition duration-500 shadow-md">
-                            ยืนยันการส่งคำขอจองโต๊ะ
+                            <span data-i18n="form_submit">ยืนยันการส่งคำขอจองโต๊ะ</span>
                         </button>
                     </div>
                 </form>
@@ -372,14 +375,14 @@
                 </p>
             </div>
             <div>
-                <span class="text-white font-medium block mb-4 uppercase tracking-[0.2em] text-xs">เวลาทำการ</span>
+                <span class="text-white font-medium block mb-4 uppercase tracking-[0.2em] text-xs" data-i18n="foot_hours_title">เวลาทำการ</span>
                 <p class="text-stone-400 text-xs leading-relaxed">
-                    เปิดให้บริการทุกวัน <br>
+                    <span data-i18n="foot_hours">เปิดให้บริการทุกวัน</span> <br>
                     10:00 น. — 22:00 น.
                 </p>
             </div>
             <div>
-                <span class="text-white font-medium block mb-4 uppercase tracking-[0.2em] text-xs">ติดต่อเรา</span>
+                <span class="text-white font-medium block mb-4 uppercase tracking-[0.2em] text-xs" data-i18n="foot_contact_title">ติดต่อเรา</span>
                 <p class="text-stone-400 text-xs leading-relaxed hover:text-white transition cursor-pointer">โทร: 02-XXX-XXXX</p>
                 <p class="text-stone-400 text-xs leading-relaxed hover:text-amber-500 transition cursor-pointer">อีเมล: reserve@savoeyriverview.com</p>
             </div>
@@ -391,27 +394,7 @@
     </footer>
 
     <!-- Scripts -->
-    <!-- สคริปต์เปิดใช้งาน Google Translate แบบไม่รก -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            // โหลดใส่สำหรับ Desktop
-            new google.translate.TranslateElement({
-                pageLanguage: 'th',
-                includedLanguages: 'en,th,zh-CN,ja', // กำหนดภาษาที่ต้องการให้แปล (อังกฤษ, ไทย, จีน, ญี่ปุ่น)
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-            
-            // กรณีเป็นมือถือก็สร้างอีกตัวเลือกเพื่อความสวยงาม
-            if(window.innerWidth < 1024) {
-                 new google.translate.TranslateElement({
-                    pageLanguage: 'th',
-                    includedLanguages: 'en,th,zh-CN,ja',
-                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                }, 'google_translate_element_mobile');
-            }
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -446,5 +429,158 @@
             window.addEventListener("scroll", handleNavScroll);
         });
     </script>
+
+    <script>
+    /* ── CUSTOM i18n ENGINE ────────────────────────────────────────────── */
+    const T = {
+        th: {
+            nav_about:'เรื่องราวของเรา', nav_gastronomy:'สุนทรียศาสตร์',
+            nav_ambiance:'ทัศนียภาพ', nav_banquet:'จัดเลี้ยง', nav_reserve:'สำรองที่นั่ง',
+            hero_badge:'The Ultimate Riverside Dining',
+            hero_h1a:'สัมผัสความเหนือระดับ', hero_h1b:'ริมแม่น้ำเจ้าพระยา',
+            hero_sub:'ร่วมเฉลิมฉลองค่ำคืนสุดพิเศษด้วยรสชาติอาหารไทยต้นตำรับอันเป็นเอกลักษณ์ ท่ามกลางวิวพาโนรามาของสะพานภูมิพลที่งดงามที่สุด',
+            hero_cta:'สำรองโต๊ะส่วนตัว',
+            about_tag:'Our Legacy',
+            about_h1:'ตำนานความอร่อย', about_h2:'ที่ส่งต่อมาร่วม', about_h3:'ครึ่งศตวรรษ',
+            about_p1:'เสวย ริเวอร์วิว ไม่ได้เป็นเพียงแค่ร้านอาหาร แต่คือสถานที่รวบรวมความทรงจำอันล้ำค่า ทุกเมนูถูกรังสรรค์ด้วยความพิถีพิถันจากวัตถุดิบที่คัดสรรอย่างยอดเยี่ยมที่สุดในแต่ละวัน เพื่อมอบรสชาติอันเป็นที่สุดให้แก่คุณ',
+            about_p2:'ไม่ว่าจะเป็นมื้ออาหารค่ำอันอบอุ่นกับครอบครัว หรือการต้อนรับพันธมิตรทางธุรกิจคนสำคัญ บรรยากาศและการบริการระดับพรีเมียมของเราพร้อมที่จะเปลี่ยนมื้อธรรมดาให้เป็นความประทับใจที่ไม่รู้ลืม',
+            gastro_tag:'Culinary Artifacts',
+            gastro_h1:'ศิลปะแห่งรสชาติ', gastro_h2:'ระดับมาสเตอร์พีซ',
+            gastro_sub:'คัดสรรวัตถุดิบอาหารทะเลสดใหม่จากท้องทะเลไทย นำมาปรุงแต่งผ่านฝีมือเชฟผู้เชี่ยวชาญเพื่อคงความหวานตามธรรมชาติพร้อมรสสัมผัสที่กลมกล่อมสมบูรณ์แบบ',
+            m1_name:'กุ้งแม่น้ำเผาเตาถ่านไซส์พรีเมียม',
+            m1_desc:'กุ้งแม่น้ำธรรมชาติคัดขนาดพิเศษ มันกุ้งเยิ้มหอมกรุ่น เสิร์ฟคู่กับน้ำจิ้มซีฟู้ดสูตรลับเฉพาะที่สืบทอดมารุ่นสู่รุ่น',
+            m2_name:'เป็ดย่างฮ่องกงสูตรโบราณ',
+            m2_desc:'หนังกรอบเนื้อนุ่มละมุนลิ้น ผ่านกระบวนการอบและหมักเครื่องเทศสมุนไพรจีนนานกว่า 24 ชั่วโมง',
+            m3_name:'ปูทะเลเนื้อผัดผงกะหรี่สูตรเสวย',
+            m3_desc:'เมนูซิกเนเจอร์อันดับหนึ่ง เนื้อปูทะเลสดก้ามโต เนื้อแน่นหวาน ผัดคลุกเคล้าซอสผงกะหรี่เนื้อเนียนนุ่มเข้มข้น',
+            amb_tag:'The Majestic Vista',
+            amb_h1:'วิจิตรตระการตา', amb_h2:'ตระกองแสงไฟสะท้อน', amb_h3:'ผืนน้ำ',
+            amb_p:'เมื่อค่ำคืนมาเยือน แสงไฟสีทองจากสะพานภูมิพลจะทอดเงาสะท้อนลงบนแม่น้ำเจ้าพระยาอย่างงดงาม ราวกับภาพวาดที่มีชีวิต มอบบรรยากาศอันแสนโรแมนติกที่ไม่มีใครเทียบได้ให้กับมื้อค่ำของคุณ',
+            ban_tag:'Bespoke Gatherings',
+            ban_h1:'พื้นที่จัดเลี้ยงส่วนตัว', ban_h2:'เหนือระดับ',
+            ban_p:'ตอบโจทย์ทุกความต้องการระดับพรีเมียม ด้วยห้องวีไอพีส่วนตัวที่ตกแต่งอย่างหรูหรา และพื้นที่ริมน้ำอเนกประสงค์ที่รองรับทั้งงานเลี้ยงสังสรรค์ขององค์กร งานเปิดตัวผลิตภัณฑ์ หรือพิธีมงคลสมรสอันแสนหวาน พร้อมทีมงานดูแลระดับมืออาชีพ',
+            ban_li1:'ระบบโสตทัศนูปกรณ์และเครื่องเสียงที่ทันสมัยครบครัน',
+            ban_li2:'บริการจัดแต่งดีไซน์สถานที่ตามเอกลักษณ์ของงานคุณ',
+            ban_li3:'ออกแบบคอร์สเมนูอาหารสุดพิเศษ (Customized Menu) โดยเชฟใหญ่',
+            review_q:'เป็นสถานที่จัดงานเลี้ยงพาร์ทเนอร์ธุรกิจที่น่าประทับใจมาก แขกต่างชาติทุกคนประทับใจในวิวแม่น้ำเจ้าพระยา รสชาติของกุ้งเผา และการบริการที่ไร้ที่ติ แนะนำอย่างยิ่งสำหรับงานสำคัญ',
+            review_author:'คุณกิตติพงษ์ — ประธานบริหารกลุ่มธนกิจ B2B',
+            res_tag:'Make a Reservation',
+            res_h1:'สังสรรค์ช่วงเวลาอันมีค่า', res_h2:'ของคุณ',
+            form_name:'ชื่อ - นามสกุล', form_phone:'เบอร์โทรศัพท์',
+            form_date:'วันที่ต้องการจอง', form_time:'เวลา',
+            form_guests:'จำนวนท่าน', form_note:'ความต้องการเพิ่มเติม (ถ้ามี)',
+            form_submit:'ยืนยันการส่งคำขอจองโต๊ะ',
+            foot_hours_title:'เวลาทำการ', foot_hours:'เปิดให้บริการทุกวัน',
+            foot_contact_title:'ติดต่อเรา',
+        },
+        en: {
+            nav_about:'Our Story', nav_gastronomy:'Gastronomy',
+            nav_ambiance:'The View', nav_banquet:'Events', nav_reserve:'Reserve',
+            hero_badge:'The Ultimate Riverside Dining',
+            hero_h1a:'Experience the Extraordinary', hero_h1b:'On the Chao Phraya',
+            hero_sub:'Celebrate a special evening with iconic Thai cuisine and the most breathtaking panoramic view of Bhumibol Bridge.',
+            hero_cta:'Reserve a Private Table',
+            about_tag:'Our Legacy',
+            about_h1:'A Legend of Flavour', about_h2:'Passed Down for Over', about_h3:'Half a Century',
+            about_p1:'Savoey River View is more than a restaurant — it is a place where precious memories are made. Every dish is crafted with meticulous care, using only the finest ingredients sourced daily to deliver an unparalleled culinary experience.',
+            about_p2:'Whether it is an intimate family dinner or hosting distinguished business partners, our premium ambiance and impeccable service will transform any occasion into an unforgettable memory.',
+            gastro_tag:'Culinary Artifacts',
+            gastro_h1:'The Art of Flavour — ', gastro_h2:'Masterpiece Level',
+            gastro_sub:'Sourcing the freshest seafood from Thai waters, crafted by expert chefs to preserve natural sweetness with a perfectly balanced finish.',
+            m1_name:'Premium Charcoal-Grilled River Prawn',
+            m1_desc:'Hand-selected giant river prawns, rich with creamy prawn roe, served with our secret heirloom seafood dipping sauce passed down through generations.',
+            m2_name:'Ancient Recipe Hong Kong Roast Duck',
+            m2_desc:'Crispy golden skin with melt-in-your-mouth tender meat, marinated in Chinese herbs and spices for over 24 hours.',
+            m3_name:'Savoey Signature Crab Curry',
+            m3_desc:'Our number-one signature dish: fresh jumbo sea crab with firm, naturally sweet meat, tossed in a rich, silky yellow curry sauce.',
+            amb_tag:'The Majestic Vista',
+            amb_h1:'A Breathtaking Spectacle —', amb_h2:'Golden Light Reflected', amb_h3:'Across the Water',
+            amb_p:'As night falls, the golden lights of Bhumibol Bridge cast their shimmering reflection across the Chao Phraya River — like a living painting, creating an unrivalled romantic atmosphere for your evening.',
+            ban_tag:'Bespoke Gatherings',
+            ban_h1:'Private Event Spaces', ban_h2:'Beyond Compare',
+            ban_p:'Meeting every premium need with elegantly appointed VIP private rooms and versatile riverside venues, accommodating corporate dinners, product launches, and intimate weddings — all with a dedicated professional team.',
+            ban_li1:'State-of-the-art audiovisual and sound systems',
+            ban_li2:'Custom venue styling tailored to your event identity',
+            ban_li3:'Bespoke multi-course menus designed by our Executive Chef',
+            review_q:'An impressive venue for a business partner dinner. Every international guest was captivated by the Chao Phraya view, the grilled prawns, and the flawless service. Highly recommended for important occasions.',
+            review_author:'Kittiphong — President & CEO, B2B Thanakij Group',
+            res_tag:'Make a Reservation',
+            res_h1:'Curate a Precious Moment', res_h2:'That is Yours',
+            form_name:'Full Name', form_phone:'Phone Number',
+            form_date:'Preferred Date', form_time:'Time',
+            form_guests:'Number of Guests', form_note:'Special Requests (if any)',
+            form_submit:'Submit Reservation Request',
+            foot_hours_title:'Opening Hours', foot_hours:'Open Daily',
+            foot_contact_title:'Contact Us',
+        },
+        zh: {
+            nav_about:'品牌故事', nav_gastronomy:'美食艺术',
+            nav_ambiance:'河景风光', nav_banquet:'宴会活动', nav_reserve:'立即预订',
+            hero_badge:'终极河畔用餐体验',
+            hero_h1a:'领略卓越非凡', hero_h1b:'于昭披耶河畔',
+            hero_sub:'在布密蓬大桥壮丽全景的映衬下，共赴一场以标志性泰式料理为主角的特别夜宴。',
+            hero_cta:'预订私人餐桌',
+            about_tag:'品牌传承',
+            about_h1:'半个世纪的', about_h2:'传奇美味', about_h3:'薪火相传',
+            about_p1:'Savoey River View 不仅仅是一家餐厅，更是无数珍贵记忆的汇聚之地。每一道菜品均以严苛的工艺精心烹制，每日甄选最优质的食材，只为给您带来无与伦比的美食体验。',
+            about_p2:'无论是与家人共享温馨晚宴，还是接待重要商业伙伴，我们顶级的用餐环境与无微不至的服务，都将把每一个普通时刻升华为永生难忘的美好记忆。',
+            gastro_tag:'美食艺术',
+            gastro_h1:'品味的艺术 — ', gastro_h2:'臻品级呈现',
+            gastro_sub:'精选来自泰国海域的新鲜海产，由资深主厨匠心烹制，最大程度保留食材的天然鲜甜，带来口感醇厚、层次丰富的极致享受。',
+            m1_name:'顶级碳烤河虾',
+            m1_desc:'甄选天然巨型河虾，虾膏饱满浓郁，搭配祖传秘方海鲜蘸酱，世代相传，风味独特。',
+            m2_name:'古法港式烤鸭',
+            m2_desc:'外皮金黄酥脆，肉质细嫩入口即化，以中药香料腌制超过24小时，香气馥郁。',
+            m3_name:'Savoey招牌咖喱炒螃蟹',
+            m3_desc:'招牌人气第一名：新鲜肥美海蟹，蟹肉紧实饱满，自然鲜甜，以浓郁细滑的黄咖喱酱翻炒而成，风味浓烈迷人。',
+            amb_tag:'壮丽景致',
+            amb_h1:'美轮美奂 —', amb_h2:'华灯倒影', amb_h3:'映照水面',
+            amb_p:'夜幕降临，布密蓬大桥的金色灯光如诗如画地倒映在昭披耶河面上，宛若一幅流动的画卷，为您的晚宴营造出无可比拟的浪漫氛围。',
+            ban_tag:'定制宴会体验',
+            ban_h1:'私人宴会专属空间', ban_h2:'卓越非凡',
+            ban_p:'全方位满足各类高端需求。精装私人VIP包厢与多功能河畔场地，可承接企业宴席、产品发布会或甜蜜婚礼，专业团队全程贴心服务。',
+            ban_li1:'配备顶级视听系统及专业音响设备',
+            ban_li2:'依据活动主题提供个性化场地装饰服务',
+            ban_li3:'由行政总厨为您量身定制专属多道式料理菜单',
+            review_q:'这是一个令人印象深刻的商务宴请场所。每位外国宾客都深深折服于昭披耶河的壮观景色、炭烤河虾的鲜美以及无可挑剔的服务水准。强烈推荐用于重要场合。',
+            review_author:'Kittiphong先生 — B2B Thanakij集团总裁',
+            res_tag:'立即预订',
+            res_h1:'共赴一段珍贵时光', res_h2:'属于您的专属体验',
+            form_name:'姓名', form_phone:'联系电话',
+            form_date:'预订日期', form_time:'用餐时间',
+            form_guests:'用餐人数', form_note:'特殊需求（如有）',
+            form_submit:'提交预订申请',
+            foot_hours_title:'营业时间', foot_hours:'每日营业',
+            foot_contact_title:'联系我们',
+        }
+    };
+
+    let curLang = 'th';
+
+    function setLang(lang) {
+        if (lang === curLang) return;
+        curLang = lang;
+
+        // Update button states
+        document.querySelectorAll('.lang-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', ['th','en','zh'][i] === lang);
+        });
+
+        // Fade out
+        document.body.classList.add('lang-fading');
+
+        setTimeout(() => {
+            // Apply all translations
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (T[lang] && T[lang][key] !== undefined) {
+                    el.textContent = T[lang][key];
+                }
+            });
+            document.body.classList.remove('lang-fading');
+        }, 200);
+    }
+    </script>
+
 </body>
 </html>
